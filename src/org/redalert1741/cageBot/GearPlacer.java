@@ -1,16 +1,16 @@
 package org.redalert1741.cageBot;
 
 import edu.wpi.first.wpilibj.Solenoid;
-import com.ctre.CANTalon;
+import edu.wpi.first.wpilibj.Spark;
 
 public class GearPlacer 
 {
 	Solenoid liftL, liftR, pushL, pushR;
-	private CANTalon in;
+	private Spark in;
 	
 	public GearPlacer(int liftL, int liftR, int pushL, int pushR, int intake)
 	{
-		this.in = new CANTalon(intake);
+		this.in = new Spark(intake);
 		this.liftL = new Solenoid(liftL);
 		this.liftR = new Solenoid(liftR);
 		this.pushL = new Solenoid(pushL);
