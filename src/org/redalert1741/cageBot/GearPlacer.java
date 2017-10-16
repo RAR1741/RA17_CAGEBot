@@ -1,10 +1,14 @@
 package org.redalert1741.cageBot;
 
+import org.redalert1741.robotBase.config.Config;
+import org.redalert1741.robotBase.config.Configurable;
+
 import edu.wpi.first.wpilibj.Solenoid;
 import edu.wpi.first.wpilibj.Spark;
 
-public class GearPlacer 
+public class GearPlacer implements Configurable
 {
+	boolean liftOn, pushOn;
 	Solenoid liftL, liftR, pushL, pushR;
 	private Spark in;
 	
@@ -19,30 +23,37 @@ public class GearPlacer
 	
 	public void liftUp()
 	{
-		liftL.set(false);
-		liftR.set(false);
+		liftL.set(liftOn);
+		liftR.set(liftOn);
 	}
 	
 	public void liftDown()
 	{
-		liftL.set(true);
-		liftR.set(true);
+		liftL.set(!liftOn);
+		liftR.set(!liftOn);
 	}
 	
 	public void push()
 	{
-		pushL.set(true);
-		pushR.set(true);
+		pushL.set(pushOn);
+		pushR.set(pushOn);
 	}
 	
 	public void hold()
 	{
-		pushL.set(true);
-		pushR.set(true);
+		pushL.set(!pushOn);
+		pushR.set(!pushOn);
 	}
 	
 	public void setIntake(double x)
 	{
 		in.set(x);
+	}
+
+	@Override
+	public void reloadConfig()
+	{
+		liftOn = Config.getSetting("liftOn", false);
+		pushOn = Config.getSetting("pushOn", true);
 	}
 }
