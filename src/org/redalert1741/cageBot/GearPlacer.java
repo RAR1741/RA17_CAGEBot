@@ -2,11 +2,13 @@ package org.redalert1741.cageBot;
 
 import org.redalert1741.robotBase.config.Config;
 import org.redalert1741.robotBase.config.Configurable;
+import org.redalert1741.robotBase.logging.DataLogger;
+import org.redalert1741.robotBase.logging.Loggable;
 
 import edu.wpi.first.wpilibj.Solenoid;
 import edu.wpi.first.wpilibj.Spark;
 
-public class GearPlacer implements Configurable
+public class GearPlacer implements Configurable, Loggable
 {
 	boolean liftOn, pushOn;
 	Solenoid liftL, liftR, pushL, pushR;
@@ -55,5 +57,21 @@ public class GearPlacer implements Configurable
 	{
 		liftOn = Config.getSetting("liftOn", false);
 		pushOn = Config.getSetting("pushOn", true);
+	}
+
+	@Override
+	public void setupLogging(DataLogger logger)
+	{
+		logger.addAttribute("liftState");
+		logger.addAttribute("pushState");
+		logger.addAttribute("intakeSpeed");
+	}
+
+	@Override
+	public void log(DataLogger logger)
+	{
+		logger.log("liftState", liftL.get());
+		logger.log("pushState", pushR.get());
+		logger.log("intakeSpeed", in.get());
 	}
 }
