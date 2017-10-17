@@ -1,11 +1,16 @@
 package org.redalert1741.cageBot;
 
+import org.redalert1741.robotBase.config.Config;
+import org.redalert1741.robotBase.config.Configurable;
+import org.redalert1741.robotBase.logging.DataLogger;
+import org.redalert1741.robotBase.logging.Loggable;
+
 import com.ctre.CANTalon;
 
-public class TankDrive
+public class TankDrive implements Configurable, Loggable
 {
 	private CANTalon l1, l2, l3, r1, r2, r3;
-	
+	boolean leftInvert;
 	public TankDrive(int l1, int l2, int l3, int r1, int r2, int r3)
 	{
 		this.l1 = new CANTalon(l1);
@@ -14,9 +19,12 @@ public class TankDrive
 		this.r1 = new CANTalon(r1);
 		this.r2 = new CANTalon(r2);
 		this.r3 = new CANTalon(r3);
-		this.l1.reverseOutput(true);
-		this.l2.reverseOutput(true);
-		this.l3.reverseOutput(true);
+		this.l1.reverseOutput(leftInvert);
+		this.l2.reverseOutput(leftInvert);
+		this.l3.reverseOutput(leftInvert);
+		this.r1.reverseOutput(!leftInvert);
+		this.r2.reverseOutput(!leftInvert);
+		this.r3.reverseOutput(!leftInvert);
 	}
 	
 	private void driveLeft(double val)
@@ -37,5 +45,25 @@ public class TankDrive
 	{
 		driveLeft(y+x);
 		driveRight(y-x);
+	}
+
+	@Override
+	public void setupLogging(DataLogger logger)
+	{
+		logger.addAttribute("leftSpeed");
+		logger.addAttribute("rightSpeed");
+	}
+
+	@Override
+	public void log(DataLogger logger)
+	{
+		logger.log("leftSpeed", l2.get());
+		logger.log("riightSpeed", r2.get());	
+	}
+
+	@Override
+	public void reloadConfig()
+	{
+		leftInvert = Config.getSetting("leftInvert", true);
 	}
 }
