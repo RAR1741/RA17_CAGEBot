@@ -2,6 +2,7 @@ package org.redalert1741.cageBot;
 
 import edu.wpi.first.wpilibj.GenericHID.Hand;
 
+import java.io.File;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -87,10 +88,12 @@ public class Robot extends IterativeRobot
 	
 	public void startLogging(String mode)
 	{
+		String dir = "/home/lvuers/logs";
+		new File(dir).mkdirs();
 		TimeZone tz = TimeZone.getTimeZone("EST");
 		DateFormat df = new SimpleDateFormat("yyyy-MM-dd_HH-mm-ss");
 		df.setTimeZone(tz);
-		logger.open("log-" + df.format(new Date()) + "_" + mode + ".log");
+		logger.open(dir + "/log-" + df.format(new Date()) + "_" + mode + ".log");
 	}
  }
 
