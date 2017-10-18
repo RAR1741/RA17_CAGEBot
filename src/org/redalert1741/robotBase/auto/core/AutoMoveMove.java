@@ -9,5 +9,6 @@ public interface AutoMoveMove
 	 * @param args Map of arguments
 	 */
 	public void setArgs(Map<String, String> args);
+	public void start();
 	public void run();
 }

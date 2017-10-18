@@ -32,6 +32,12 @@ public class AutoMove
 	public boolean isFinshed() { return finished; }
 	public boolean isAsync() { return (args.containsKey("async") ? (boolean) args.get("async") : false); }
 	
+	public void start()
+	{
+		amm.start();
+		ame.start();
+	}
+	
 	/**
 	 * Iterative run. Also checks if the move is finished.
 	 */

@@ -32,6 +32,7 @@ public class Autonomous
 		while(moves.get(i).isAsync())
 		{
 			active.add(moves.get(i));
+			active.get(active.size()-1).start();
 			i++;
 		}
 		for(int k = 0; k < active.size(); k++)
@@ -39,6 +40,12 @@ public class Autonomous
 			active.get(k).run();
 			if(active.get(k).isFinshed())
 			{
+				if(k-1 == active.size())
+				{
+					active.add(moves.get(i));
+					active.get(active.size()-1).start();
+					i++;
+				}
 				active.remove(k);
 				k--;
 			}
