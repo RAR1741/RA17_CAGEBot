@@ -54,7 +54,7 @@ public class Robot extends IterativeRobot
 	public void autonomousInit()
 	{
 		startLogging("auto");
-		auto = new JsonAutoFactory().makeAuto(Config.getSetting("auto", "none_auto.json"));
+		auto = new JsonAutoFactory().makeAuto("/home/lvuser/autos/" + Config.getSetting("auto", "none_auto") + ".json");
 	}
 
 	@Override
