@@ -8,6 +8,9 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.TimeZone;
 
+import org.redalert1741.cageBot.auto.move.DriveArcadeMove;
+import org.redalert1741.robotBase.auto.core.*;
+import org.redalert1741.robotBase.auto.end.*;
 import org.redalert1741.robotBase.config.Config;
 import org.redalert1741.robotBase.logging.DataLogger;
 
@@ -16,8 +19,12 @@ import edu.wpi.first.wpilibj.XboxController;
 
 public class Robot extends IterativeRobot
 {
-	public XboxController driver, operator;
+	XboxController driver, operator;
 	DataLogger logger;
+	TankDrive drive;
+	Climber climber;
+	GearPlacer placer;
+	Autonomous auto;
 	
 	@Override
 	public void robotInit()
@@ -25,13 +32,29 @@ public class Robot extends IterativeRobot
 		driver = new XboxController(0);
 		operator = new XboxController(1);
 		logger = new DataLogger();
+		drive = new TankDrive(1,2,3,4,5,6);
+		climber = new Climber(0,1);
+		placer = new GearPlacer(0,1,2,3,2);
+		
+		//config
+		Config.addConfigurable(drive);
+		Config.addConfigurable(placer);
 		Config.loadFromFile("/home/lvuser/config.txt");
+		Config.reloadConfig();
+		
+		//logging
+		setupLogging();
+		
+		//auto
+		AutoFactory.addMoveEnd("timed", () -> new TimedEnd());
+		AutoFactory.addMoveMove("arcadeDrive", () -> new DriveArcadeMove(drive));
 	}
 
 	@Override
 	public void autonomousInit()
 	{
 		startLogging("auto");
+		auto = new JsonAutoFactory().makeAuto(Config.getSetting("auto", "none_auto.json"));
 	}
 
 	@Override
@@ -51,7 +74,7 @@ public class Robot extends IterativeRobot
 	{
 		double x = driver.getX(Hand.kRight);
 		double y = driver.getY(Hand.kLeft);
-		// do drive
+		drive.arcadeDrive(deadband(x), deadband(y));
 		
 		logger.log();
 	}
@@ -83,6 +106,9 @@ public class Robot extends IterativeRobot
 	
 	public void setupLogging()
 	{
+		logger.addLoggable(drive);
+		logger.addLoggable(climber);
+		logger.addLoggable(placer);
 		logger.setupLoggables();
 	}
 	

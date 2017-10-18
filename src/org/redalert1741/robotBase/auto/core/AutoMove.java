@@ -47,6 +47,7 @@ public class AutoMove
 		if(ame.isFinished())
 		{
 			finished = true;
+			amm.stop();
 		}
 	}	
 }

@@ -14,4 +14,7 @@ public class EmptyMove implements AutoMoveMove
 
 	@Override
 	public void start() {}
+
+	@Override
+	public void stop() {}
 }

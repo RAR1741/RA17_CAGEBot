@@ -11,4 +11,5 @@ public interface AutoMoveMove
 	public void setArgs(Map<String, String> args);
 	public void start();
 	public void run();
+	public void stop();
 }
