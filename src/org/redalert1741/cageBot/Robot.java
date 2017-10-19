@@ -13,11 +13,13 @@ import org.redalert1741.robotBase.auto.core.*;
 import org.redalert1741.robotBase.auto.end.*;
 import org.redalert1741.robotBase.config.Config;
 import org.redalert1741.robotBase.logging.DataLogger;
+import org.redalert1741.robotBase.logging.Loggable;
 
 import edu.wpi.first.wpilibj.IterativeRobot;
+import edu.wpi.first.wpilibj.PowerDistributionPanel;
 import edu.wpi.first.wpilibj.XboxController;
 
-public class Robot extends IterativeRobot
+public class Robot extends IterativeRobot implements Loggable
 {
 	XboxController driver, operator;
 	DataLogger logger;
@@ -25,6 +27,7 @@ public class Robot extends IterativeRobot
 	Climber climber;
 	GearPlacer placer;
 	Autonomous auto;
+	PowerDistributionPanel pdp;
 	
 	@Override
 	public void robotInit()
@@ -35,6 +38,7 @@ public class Robot extends IterativeRobot
 		drive = new TankDrive(1,2,3,4,5,6);
 		climber = new Climber(0,1);
 		placer = new GearPlacer(0,1,2,3,2);
+		pdp = new PowerDistributionPanel(60);
 		
 		//config
 		Config.addConfigurable(drive);
@@ -109,6 +113,7 @@ public class Robot extends IterativeRobot
 		logger.addLoggable(drive);
 		logger.addLoggable(climber);
 		logger.addLoggable(placer);
+		logger.addLoggable(this);
 		logger.setupLoggables();
 	}
 	
@@ -120,6 +125,20 @@ public class Robot extends IterativeRobot
 		DateFormat df = new SimpleDateFormat("yyyy-MM-dd_HH-mm-ss");
 		df.setTimeZone(tz);
 		logger.open(dir + "/log-" + df.format(new Date()) + "_" + mode + ".log");
+	}
+
+	@Override
+	public void setupLogging(DataLogger logger)
+	{
+		logger.addAttribute("PDPvoltage");
+		logger.addAttribute("PDPcurrent");
+	}
+
+	@Override
+	public void log(DataLogger logger)
+	{
+		logger.log("PDPvoltage", pdp.getVoltage());
+		logger.log("PDPcurrent", pdp.getTotalCurrent());
 	}
  }
 

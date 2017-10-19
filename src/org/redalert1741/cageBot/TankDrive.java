@@ -52,13 +52,25 @@ public class TankDrive implements Configurable, Loggable
 	{
 		logger.addAttribute("leftSpeed");
 		logger.addAttribute("rightSpeed");
+		logger.addAttribute("l1current");
+		logger.addAttribute("l2current");
+		logger.addAttribute("l3current");
+		logger.addAttribute("r1current");
+		logger.addAttribute("r2current");
+		logger.addAttribute("r3current");
 	}
 
 	@Override
 	public void log(DataLogger logger)
 	{
 		logger.log("leftSpeed", l2.get());
-		logger.log("riightSpeed", r2.get());	
+		logger.log("rightSpeed", r2.get());
+		logger.log("l1current", l1.getOutputCurrent());
+		logger.log("l2current", l2.getOutputCurrent());
+		logger.log("l3current", l3.getOutputCurrent());
+		logger.log("r1current", r1.getOutputCurrent());
+		logger.log("r2current", r2.getOutputCurrent());
+		logger.log("r3current", r3.getOutputCurrent());
 	}
 
 	@Override
