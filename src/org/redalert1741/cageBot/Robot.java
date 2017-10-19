@@ -28,7 +28,7 @@ public class Robot extends IterativeRobot implements Loggable
 	GearPlacer placer;
 	Autonomous auto;
 	PowerDistributionPanel pdp;
-	
+
 	@Override
 	public void robotInit()
 	{

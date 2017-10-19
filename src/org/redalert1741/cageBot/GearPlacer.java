@@ -13,7 +13,14 @@ public class GearPlacer implements Configurable, Loggable
 	boolean liftOn, pushOn;
 	Solenoid liftL, liftR, pushL, pushR;
 	private Spark in;
-	
+	/**
+	 * Four solenoids for the pneumatic gear placer + one motor for the intake
+	 * @param liftL {@link Solenoid} for lift
+	 * @param liftR {@link Solenoid} for lift
+	 * @param pushL {@link Solenoid} for push
+	 * @param pushR {@link Solenoid} for push
+	 * @param intake PWM ID for intake {@link Spark}
+	 */
 	public GearPlacer(int liftL, int liftR, int pushL, int pushR, int intake)
 	{
 		this.in = new Spark(intake);

@@ -11,6 +11,15 @@ public class TankDrive implements Configurable, Loggable
 {
 	private CANTalon l1, l2, l3, r1, r2, r3;
 	boolean leftInvert;
+	/**
+	 * Tank Drive using three {@link CANTalon CANTalons} on each side.
+	 * @param l1 CAN ID of a talon on the left
+	 * @param l2 CAN ID of a talon on the left
+	 * @param l3 CAN ID of a talon on the left
+	 * @param r1 CAN ID of a talon on the right
+	 * @param r2 CAN ID of a talon on the right
+	 * @param r3 CAN ID of a talon on the right
+	 */
 	public TankDrive(int l1, int l2, int l3, int r1, int r2, int r3)
 	{
 		this.l1 = new CANTalon(l1);
