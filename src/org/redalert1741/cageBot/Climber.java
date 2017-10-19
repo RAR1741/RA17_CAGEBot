@@ -9,7 +9,11 @@ public class Climber implements Loggable
 {
 	private Spark climber1;
 	private Spark climber2;
-
+	/**
+	 * Two Sparks for the climber
+	 * @param c1
+	 * @param c2
+	 */
 	public Climber(int c1, int c2)
 	{
 		climber1 = new Spark(c1);
