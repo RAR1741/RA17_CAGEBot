@@ -64,7 +64,7 @@ public class Robot extends IterativeRobot implements Loggable
 	@Override
 	public void autonomousPeriodic()
 	{
-
+		auto.run();
 	}
 	
 	@Override
