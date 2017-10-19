@@ -78,7 +78,8 @@ public class Robot extends IterativeRobot implements Loggable
 	{
 		double x = driver.getX(Hand.kRight);
 		double y = driver.getY(Hand.kLeft);
-		drive.arcadeDrive(deadband(x), deadband(y));
+		boolean boost = driver.getBumper(Hand.kLeft);
+		drive.arcadeDrive(deadband(x) * (boost ? 1 : 0.6), deadband(y) * (boost ? 1 : 0.6));
 		
 		logger.log();
 	}
