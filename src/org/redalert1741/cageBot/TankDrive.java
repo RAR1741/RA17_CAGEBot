@@ -28,12 +28,6 @@ public class TankDrive implements Configurable, Loggable
 		this.r1 = new CANTalon(r1);
 		this.r2 = new CANTalon(r2);
 		this.r3 = new CANTalon(r3);
-		this.l1.reverseOutput(leftInvert);
-		this.l2.reverseOutput(leftInvert);
-		this.l3.reverseOutput(leftInvert);
-		this.r1.reverseOutput(!leftInvert);
-		this.r2.reverseOutput(!leftInvert);
-		this.r3.reverseOutput(!leftInvert);
 	}
 	
 	private void driveLeft(double val)
@@ -45,9 +39,9 @@ public class TankDrive implements Configurable, Loggable
 	
 	private void driveRight(double val)
 	{
-		r1.set(val);
-		r2.set(val);
-		r3.set(val);
+		r1.set(-val);
+		r2.set(-val);
+		r3.set(-val);
 	}
 	
 	public void arcadeDrive(double x, double y)

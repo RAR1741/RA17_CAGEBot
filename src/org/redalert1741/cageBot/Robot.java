@@ -36,8 +36,8 @@ public class Robot extends IterativeRobot implements Loggable
 		operator = new XboxController(1);
 		logger = new DataLogger();
 		drive = new TankDrive(1,2,3,4,5,6);
-		climber = new Climber(0,1);
-		placer = new GearPlacer(0,1,2,3,2);
+		climber = new Climber(1,2);
+		placer = new GearPlacer(0,1,2,3,0);
 		pdp = new PowerDistributionPanel(60);
 		
 		//config
@@ -45,9 +45,6 @@ public class Robot extends IterativeRobot implements Loggable
 		Config.addConfigurable(placer);
 		Config.loadFromFile("/home/lvuser/config.txt");
 		Config.reloadConfig();
-		
-		//logging
-		setupLogging();
 		
 		//auto
 		AutoFactory.addMoveEnd("timed", () -> new TimedEnd());
@@ -79,9 +76,24 @@ public class Robot extends IterativeRobot implements Loggable
 		double x = driver.getX(Hand.kRight);
 		double y = driver.getY(Hand.kLeft);
 		boolean boost = driver.getBumper(Hand.kLeft);
-		drive.arcadeDrive(deadband(x) * (boost ? 1 : 0.6), deadband(y) * (boost ? 1 : 0.6));
+		drive.arcadeDrive(deadband(x) * (boost ? 1 : 0.6), -deadband(y) * (boost ? 0.6 : 0.4));
+		
+		climber.climb(driver.getTriggerAxis(Hand.kRight));
+		
+		if (driver.getAButton())
+			placer.push();
+		else
+			placer.hold();
+		
+		if(driver.getXButton())
+			placer.liftUp();
+		else
+			placer.liftDown();
+		
+		placer.setIntake((driver.getBButton() ? 1 : -1) * driver.getTriggerAxis(Hand.kLeft));
 		
 		logger.log();
+		logger.writeLine();
 	}
 	
 	@Override
@@ -104,7 +116,7 @@ public class Robot extends IterativeRobot implements Loggable
 		else if (0.05 > Math.abs(x))
 			return 0;
 		else if (x <= -0.05)
-			return -1/0.95 * x + 0.05;
+			return 1/0.95 * x + 0.05;
 		else
 			return 0;
 	}
@@ -116,16 +128,24 @@ public class Robot extends IterativeRobot implements Loggable
 		logger.addLoggable(placer);
 		logger.addLoggable(this);
 		logger.setupLoggables();
+		logger.writeAttributes();
 	}
 	
 	public void startLogging(String mode)
 	{
-		String dir = "/home/lvuers/logs";
+		String dir = "/home/lvuser/logs";
 		new File(dir).mkdirs();
 		TimeZone tz = TimeZone.getTimeZone("EST");
 		DateFormat df = new SimpleDateFormat("yyyy-MM-dd_HH-mm-ss");
 		df.setTimeZone(tz);
 		logger.open(dir + "/log-" + df.format(new Date()) + "_" + mode + ".log");
+		setupLogging();
+	}
+	
+	@Override
+	public void disabledInit()
+	{
+		logger.close();
 	}
 
 	@Override

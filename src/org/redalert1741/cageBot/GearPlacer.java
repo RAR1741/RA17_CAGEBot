@@ -59,6 +59,7 @@ public class GearPlacer implements Configurable, Loggable
 	{
 		liftOn = Config.getSetting("liftOn", false);
 		pushOn = Config.getSetting("pushOn", true);
+		System.out.println(pushOn);
 	}
 
 	@Override
