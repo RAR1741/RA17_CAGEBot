@@ -5,13 +5,14 @@ import org.redalert1741.robotBase.config.Configurable;
 import org.redalert1741.robotBase.logging.DataLogger;
 import org.redalert1741.robotBase.logging.Loggable;
 
+import edu.wpi.first.wpilibj.DoubleSolenoid;
 import edu.wpi.first.wpilibj.Solenoid;
 import edu.wpi.first.wpilibj.Spark;
 
 public class GearPlacer implements Configurable, Loggable
 {
 	boolean liftOn, pushOn;
-	Solenoid liftL, liftR, pushL, pushR;
+	DoubleSolenoid lift, push;
 	private Spark in;
 	/**
 	 * Four solenoids for the pneumatic gear placer + one motor for the intake
@@ -24,34 +25,28 @@ public class GearPlacer implements Configurable, Loggable
 	public GearPlacer(int liftL, int liftR, int pushL, int pushR, int intake)
 	{
 		this.in = new Spark(intake);
-		this.liftL = new Solenoid(liftL);
-		this.liftR = new Solenoid(liftR);
-		this.pushL = new Solenoid(pushL);
-		this.pushR = new Solenoid(pushR);
+		this.lift = new DoubleSolenoid(liftL, liftR);
+		this.push = new DoubleSolenoid(pushL, pushR);
 	}
 	
 	public void liftUp()
 	{
-		liftL.set(liftOn);
-		liftR.set(liftOn);
+		lift.set(liftOn ? DoubleSolenoid.Value.kForward : DoubleSolenoid.Value.kReverse);
 	}
 	
 	public void liftDown()
 	{
-		liftL.set(!liftOn);
-		liftR.set(!liftOn);
+		lift.set(!liftOn ? DoubleSolenoid.Value.kForward : DoubleSolenoid.Value.kReverse);
 	}
 	
 	public void push()
 	{
-		pushL.set(pushOn);
-		pushR.set(pushOn);
+		push.set(pushOn ? DoubleSolenoid.Value.kForward : DoubleSolenoid.Value.kReverse);
 	}
 	
 	public void hold()
 	{
-		pushL.set(!pushOn);
-		pushR.set(!pushOn);
+		push.set(!pushOn ? DoubleSolenoid.Value.kForward : DoubleSolenoid.Value.kReverse);
 	}
 	
 	public void setIntake(double x)
@@ -77,8 +72,8 @@ public class GearPlacer implements Configurable, Loggable
 	@Override
 	public void log(DataLogger logger)
 	{
-		logger.log("liftState", liftL.get());
-		logger.log("pushState", pushR.get());
+		logger.log("liftState", lift.get());
+		logger.log("pushState", push.get());
 		logger.log("intakeSpeed", in.get());
 	}
 }
