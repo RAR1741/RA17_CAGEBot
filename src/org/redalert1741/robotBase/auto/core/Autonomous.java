@@ -20,35 +20,28 @@ public class Autonomous
 		active = new ArrayList<>();
 	}
 	
+	public void start()
+	{
+		i = 0;
+		moves.get(i).start();
+	}
+	
 	/**
 	 * Runs the autonomous. Meant to be run iteratively.
 	 */
 	public void run()
 	{
-		if(i == moves.size())
+		if(i < moves.size())
 		{
-			return;
-		}
-		while(moves.get(i).isAsync())
-		{
-			active.add(moves.get(i));
-			active.get(active.size()-1).start();
-			i++;
-		}
-		for(int k = 0; k < active.size(); k++)
-		{
-			active.get(k).run();
-			if(active.get(k).isFinshed())
+			moves.get(i).run();
+			if(moves.get(i).isFinshed())
 			{
-				if(k-1 == active.size())
-				{
-					active.add(moves.get(i));
-					active.get(active.size()-1).start();
-					i++;
-				}
-				active.remove(k);
-				k--;
+				i++;
+				if(i == moves.size())
+					return;
+				moves.get(i).start();
 			}
 		}
+		
 	}
 }

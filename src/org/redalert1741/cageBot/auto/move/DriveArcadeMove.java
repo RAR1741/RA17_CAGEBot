@@ -28,12 +28,14 @@ public class DriveArcadeMove implements AutoMoveMove
 	@Override
 	public void run()
 	{
+		//System.out.println("arcade drive (" + x + "," + y + ")");
 		drive.arcadeDrive(x, y);
 	}
 
 	@Override
 	public void stop()
 	{
+		//System.out.println("drive stop");
 		drive.arcadeDrive(0, 0);
 	}
 }

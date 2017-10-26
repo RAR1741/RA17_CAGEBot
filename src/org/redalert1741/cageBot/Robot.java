@@ -28,6 +28,8 @@ public class Robot extends IterativeRobot implements Loggable
 	GearPlacer placer;
 	Autonomous auto;
 	PowerDistributionPanel pdp;
+	
+	static enum DriveMode { fast, normal, slow }
 
 	@Override
 	public void robotInit()
@@ -56,6 +58,7 @@ public class Robot extends IterativeRobot implements Loggable
 	{
 		startLogging("auto");
 		auto = new JsonAutoFactory().makeAuto("/home/lvuser/autos/" + Config.getSetting("auto", "none_auto") + ".json");
+		auto.start();
 	}
 
 	@Override
@@ -64,28 +67,42 @@ public class Robot extends IterativeRobot implements Loggable
 		auto.run();
 	}
 	
+	DriveMode mode;
+	
 	@Override
 	public void teleopInit()
 	{
 		startLogging("teleop");
+		mode = DriveMode.normal;
 	}
-
+	
 	@Override
 	public void teleopPeriodic()
 	{
 		double x = driver.getX(Hand.kRight);
 		double y = driver.getY(Hand.kLeft);
-		boolean boost = driver.getBumper(Hand.kLeft);
-		drive.arcadeDrive(deadband(x) * (boost ? 1 : 0.6), -deadband(y) * (boost ? 0.6 : 0.4));
+		switch (driver.getPOV())
+		{
+		case 0:
+			mode = DriveMode.fast;
+			break;
+		case 180:
+			mode = DriveMode.normal;
+			break;
+		case 270:
+			mode = DriveMode.slow;
+		}
+		double boost = (mode == DriveMode.normal ? 0.6 : (mode == DriveMode.fast ? 1 : 0.4));
+		drive.arcadeDrive(deadband(x) * boost, -deadband(y) * boost);
 		
 		climber.climb(driver.getTriggerAxis(Hand.kRight));
 		
-		if (driver.getAButton())
+		if (driver.getBumper(Hand.kRight))
 			placer.push();
 		else
 			placer.hold();
 		
-		if(driver.getXButton())
+		if(driver.getBumper(Hand.kLeft))
 			placer.liftUp();
 		else
 			placer.liftDown();
@@ -99,6 +116,7 @@ public class Robot extends IterativeRobot implements Loggable
 	@Override
 	public void testInit()
 	{
+		Config.loadFromFile("/home/lvuser/config.txt");
 		Config.reloadConfig();
 		startLogging("test");
 	}
@@ -138,7 +156,7 @@ public class Robot extends IterativeRobot implements Loggable
 		TimeZone tz = TimeZone.getTimeZone("EST");
 		DateFormat df = new SimpleDateFormat("yyyy-MM-dd_HH-mm-ss");
 		df.setTimeZone(tz);
-		logger.open(dir + "/log-" + df.format(new Date()) + "_" + mode + ".log");
+		logger.open(dir + "/log-" + df.format(new Date()) + "_" + mode + ".csv");
 		setupLogging();
 	}
 	

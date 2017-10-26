@@ -13,6 +13,7 @@ public class TimedEnd implements AutoMoveEnd
 	public void setArgs(Map<String, String> args)
 	{
 		duration = Integer.parseInt(args.get("length"));
+		System.out.println(duration);
 	}
 	
 	@Override
@@ -24,6 +25,6 @@ public class TimedEnd implements AutoMoveEnd
 	@Override
 	public boolean isFinished()
 	{
-		return System.currentTimeMillis() < startTime + duration;
+		return System.currentTimeMillis() > startTime + duration;
 	}
 }
